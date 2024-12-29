@@ -9,11 +9,7 @@ var localArgs = args.Skip(1).ToArray();
 
 if (command == "init")
 {
-    Directory.CreateDirectory(".git");
-    Directory.CreateDirectory(".git/objects");
-    Directory.CreateDirectory(".git/refs");
-    File.WriteAllText(".git/HEAD", "ref: refs/heads/main\n");
-    Console.WriteLine("Initialized git directory");
+    InitSubProgram.Run(localArgs);
 }
 else if (command == "cat-file")
 {
