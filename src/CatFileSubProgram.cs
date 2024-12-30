@@ -25,7 +25,7 @@ internal static class CatFileSubProgram
         }
 
         var filePath = $".git/objects/{hash.Substring(0, 2)}/{hash.Substring(2)}";
-        using var compressedFileStream = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+        using var compressedFileStream = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
         using var decompressStream = new ZLibStream(compressedFileStream, CompressionMode.Decompress);
         using var binaryStream = new BinaryReader(decompressStream);
 
