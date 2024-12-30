@@ -6,16 +6,19 @@ internal class HashObjectSubProgram
 {
     public static void Run(string[] args)
     {
-        if (args.Length < 1 ) {
+        if (args.Length < 1)
+        {
             Console.WriteLine("Please provide a sub-command.");
             return;
         }
 
-        if (args[0] != "-w") {
+        if (args[0] != "-w")
+        {
             throw new ArgumentException($"Unknown sub-command {args[0]}");
         }
 
-        if (args.Length < 2 ) {
+        if (args.Length < 2)
+        {
             Console.WriteLine("Please provide a file.");
             return;
         }
@@ -33,14 +36,11 @@ internal class HashObjectSubProgram
 
         var hash = CalculateHash(memoryStream);
 
-        if (!Directory.Exists($".git/objects/{hash.Substring(0, 2)}"))
-        {
-            Directory.CreateDirectory($".git/objects/{hash.Substring(0, 2)}");
-        }
+        BlobUntil.CreateDirectoryForHash(hash);
 
         memoryStream.Position = 0;
 
-        using var outputFileStream = File.Create($".git/objects/{hash.Substring(0, 2)}/{hash.Substring(2)}");
+        using var outputFileStream = File.Create(BlobUntil.GetPathForHash(hash));
         using var compressStream = new ZLibStream(outputFileStream, CompressionMode.Compress);
 
         memoryStream.CopyTo(compressStream);

@@ -24,12 +24,12 @@ internal static class CatFileSubProgram
             throw new ArgumentException("Provided hash is incorrect");
         }
 
-        var filePath = $".git/objects/{hash.Substring(0, 2)}/{hash.Substring(2)}";
+        var filePath = BlobUntil.GetPathForHash(hash);
         using var compressedFileStream = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
         using var decompressStream = new ZLibStream(compressedFileStream, CompressionMode.Decompress);
         using var binaryStream = new BinaryReader(decompressStream);
-
         using var memoryStream = new MemoryStream();
+
         decompressStream.CopyTo(memoryStream);
         var data = memoryStream.ToArray();
         var nullIndex = Array.IndexOf(data, (byte)0);
