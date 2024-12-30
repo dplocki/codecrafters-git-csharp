@@ -21,7 +21,7 @@ internal static class CatFileSubProgram
 
         var hash = args[1];
         if (hash.Length != 40) {
-            throw new ArgumentException($"Unk");
+            throw new ArgumentException("Provided hash is incorrect");
         }
 
         var filePath = $".git/objects/{hash.Substring(0, 2)}/{hash.Substring(2)}";
