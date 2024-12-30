@@ -15,6 +15,10 @@ else if (command == "cat-file")
 {
     CatFileSubProgram.Run(localArgs);
 }
+else if (command == "hash-object")
+{
+    HashObjectSubProgram.Run(localArgs);
+}
 else
 {
     throw new ArgumentException($"Unknown command {command}");
