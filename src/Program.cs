@@ -19,6 +19,10 @@ else if (command == "hash-object")
 {
     HashObjectSubProgram.Run(localArgs);
 }
+else if (command == "ls-tree")
+{
+    LsTreeSubProgram.Run(localArgs);
+}
 else
 {
     throw new ArgumentException($"Unknown command {command}");
