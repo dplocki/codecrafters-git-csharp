@@ -1,4 +1,3 @@
-using System.IO.Compression;
 using System.Text;
 
 internal static class CatFileSubProgram
@@ -24,13 +23,7 @@ internal static class CatFileSubProgram
             throw new ArgumentException("Provided hash is incorrect");
         }
 
-        var filePath = BlobUntil.GetPathForHash(hash);
-        using var compressedFileStream = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
-        using var decompressStream = new ZLibStream(compressedFileStream, CompressionMode.Decompress);
-        using var binaryStream = new BinaryReader(decompressStream);
-        using var memoryStream = new MemoryStream();
-
-        decompressStream.CopyTo(memoryStream);
+        using var memoryStream = BlobUntil.DecompressBlob(hash);
         var data = memoryStream.ToArray();
         var nullIndex = Array.IndexOf(data, (byte)0);
         var header = Encoding.UTF8.GetString(data, 0, nullIndex);
