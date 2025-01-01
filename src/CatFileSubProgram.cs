@@ -6,7 +6,7 @@ internal static class CatFileSubProgram
     public static void Run(string[] args)
     {
         if (args.Length < 1 ) {
-            Console.WriteLine("Please provide a sub-command.");
+            Console.WriteLine("Please provide a sub-command parameters.");
             return;
         }
 

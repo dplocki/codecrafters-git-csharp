@@ -8,7 +8,7 @@ internal class HashObjectSubProgram
     {
         if (args.Length < 1)
         {
-            Console.WriteLine("Please provide a sub-command.");
+            Console.WriteLine("Please provide a sub-command parameters.");
             return;
         }
 
