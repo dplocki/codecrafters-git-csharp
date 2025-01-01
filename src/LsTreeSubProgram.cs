@@ -1,13 +1,5 @@
 using System.Text;
 
-struct TreeLine
-{
-    public string Mode;
-    public string Type;
-    public string Hash;
-    public string Name;
-}
-
 internal class LsTreeSubProgram
 {
     private const byte Null = 0;
