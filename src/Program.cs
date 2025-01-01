@@ -21,7 +21,20 @@ else if (command == "hash-object")
 }
 else if (command == "ls-tree")
 {
-    LsTreeSubProgram.Run(localArgs);
+    if (localArgs.Length == 0)
+    {
+        Console.WriteLine("Please provide a sub-command parameters.");
+        return;
+    }
+
+    var nameOnly = localArgs.Contains("--name-only");
+    if ((nameOnly && localArgs.Length == 1) || (!nameOnly && localArgs.Length == 0) ) {
+        Console.WriteLine("Please provide a hash.");
+        return;
+    }
+
+    var hash = localArgs.First(arg => arg != "--name-only");
+    LsTreeSubProgram.Run(hash, nameOnly);
 }
 else
 {

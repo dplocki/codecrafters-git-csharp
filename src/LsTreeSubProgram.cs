@@ -1,7 +1,7 @@
 internal class LsTreeSubProgram
 {
-    internal static void Run(string[] localArgs)
+    internal static void Run(string hash, bool nameOnly)
     {
-        throw new NotImplementedException();
+
     }
 }
