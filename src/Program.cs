@@ -7,36 +7,42 @@ if (args.Length < 1)
 var command = args[0];
 var localArgs = args.Skip(1).ToArray();
 
-if (command == "init")
+switch (command)
 {
-    InitSubProgram.Run(localArgs);
-}
-else if (command == "cat-file")
-{
-    CatFileSubProgram.Run(localArgs);
-}
-else if (command == "hash-object")
-{
-    HashObjectSubProgram.Run(localArgs);
-}
-else if (command == "ls-tree")
-{
-    if (localArgs.Length == 0)
-    {
-        Console.WriteLine("Please provide a sub-command parameters.");
+    case "init":
+        InitSubProgram.Run(localArgs);
         return;
-    }
 
-    var nameOnly = localArgs.Contains("--name-only");
-    if ((nameOnly && localArgs.Length == 1) || (!nameOnly && localArgs.Length == 0) ) {
-        Console.WriteLine("Please provide a hash.");
+    case "cat-file":
+        CatFileSubProgram.Run(localArgs);
         return;
-    }
 
-    var hash = localArgs.First(arg => arg != "--name-only");
-    LsTreeSubProgram.Run(hash, nameOnly);
-}
-else
-{
-    throw new ArgumentException($"Unknown command {command}");
+    case "hash-object":
+        HashObjectSubProgram.Run(localArgs);
+        return;
+
+    case "ls-tree":
+        if (localArgs.Length == 0)
+        {
+            Console.WriteLine("Please provide a sub-command parameters.");
+            return;
+        }
+
+        var nameOnly = localArgs.Contains("--name-only");
+        if (nameOnly && localArgs.Length == 1 || !nameOnly && localArgs.Length == 0)
+        {
+            Console.WriteLine("Please provide a hash.");
+            return;
+        }
+
+        var hash = localArgs.First(arg => arg != "--name-only");
+        LsTreeSubProgram.Run(hash, nameOnly);
+        return;
+
+    case "write-tree":
+        WriteTreeSubProgram.Run(localArgs);
+        return;
+
+    default:
+        throw new ArgumentException($"Unknown command {command}");
 }
