@@ -2,27 +2,8 @@ using System.Text;
 
 internal static class CatFileSubProgram
 {
-    public static void Run(string[] args)
+    public static void Run(string hash)
     {
-        if (args.Length < 1 ) {
-            Console.WriteLine("Please provide a sub-command parameters.");
-            return;
-        }
-
-        if (args[0] != "-p") {
-            throw new ArgumentException($"Unknown sub-command {args[0]}");
-        }
-
-        if (args.Length < 2 ) {
-            Console.WriteLine("Please provide a blob hash.");
-            return;
-        }
-
-        var hash = args[1];
-        if (hash.Length != 40) {
-            throw new ArgumentException("Provided hash is incorrect");
-        }
-
         using var memoryStream = BlobUntil.DecompressBlob(hash);
         var data = memoryStream.ToArray();
         var nullIndex = Array.IndexOf(data, (byte)0);
