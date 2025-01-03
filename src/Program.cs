@@ -45,8 +45,30 @@ switch (command)
         }
 
     case "hash-object":
-        HashObjectSubProgram.Run(localArgs);
-        return;
+        {
+            if (args.Length < 1)
+            {
+                Console.WriteLine("Please provide a sub-command parameters.");
+                return;
+            }
+
+            if (args[0] != "-w")
+            {
+                Console.WriteLine($"Unknown sub-command {args[0]}");
+                return;
+            }
+
+            if (args.Length < 2)
+            {
+                Console.WriteLine("Please provide a file.");
+                return;
+            }
+
+            var inputFilePath = args[1];
+
+            HashObjectSubProgram.Run(inputFilePath);
+            return;
+        }
 
     case "ls-tree":
         {

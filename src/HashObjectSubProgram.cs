@@ -4,27 +4,8 @@ using System.Text;
 
 internal class HashObjectSubProgram
 {
-    public static void Run(string[] args)
+    public static void Run(string inputFilePath)
     {
-        if (args.Length < 1)
-        {
-            Console.WriteLine("Please provide a sub-command parameters.");
-            return;
-        }
-
-        if (args[0] != "-w")
-        {
-            throw new ArgumentException($"Unknown sub-command {args[0]}");
-        }
-
-        if (args.Length < 2)
-        {
-            Console.WriteLine("Please provide a file.");
-            return;
-        }
-
-        var inputFilePath = args[1];
-
         // Compress the file after appending the additional data
         using var memoryStream = new MemoryStream();
         using var inputFileStream = File.Open(inputFilePath, FileMode.Open, FileAccess.Read, FileShare.Read);
