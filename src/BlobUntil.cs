@@ -1,4 +1,5 @@
 using System.IO.Compression;
+using System.Security.Cryptography;
 
 internal static class BlobUntil
 {
@@ -31,5 +32,30 @@ internal static class BlobUntil
         decompressStream.CopyTo(memoryStream);
         memoryStream.Position = 0;
         return memoryStream;
+    }
+
+    public static string WriteBlob(MemoryStream memoryStream)
+    {
+        memoryStream.Position = 0;
+
+        var hash = CalculateHash(memoryStream);
+
+        CreateDirectoryForHash(hash);
+
+        using var outputFileStream = File.Create(GetPathForHash(hash));
+        using var compressStream = new ZLibStream(outputFileStream, CompressionMode.Compress);
+
+        memoryStream.CopyTo(compressStream);
+
+        return hash;
+    }
+
+    private static string CalculateHash(Stream memoryStream)
+    {
+        using var sha1 = SHA1.Create();
+
+        memoryStream.Position = 0;
+        var hashBytes = sha1.ComputeHash(memoryStream);
+        return Convert.ToHexStringLower(hashBytes);
     }
 }
