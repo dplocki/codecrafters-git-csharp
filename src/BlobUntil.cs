@@ -1,5 +1,6 @@
 using System.IO.Compression;
 using System.Security.Cryptography;
+using System.Text;
 
 internal static class BlobUntil
 {
@@ -15,9 +16,10 @@ internal static class BlobUntil
 
     public static void CreateDirectoryForHash(string hash)
     {
-        if (!Directory.Exists($".git/objects/{hash[..2]}"))
+        var directoryPath = Path.Combine(".git", "objects", hash[..2]);
+        if (!Directory.Exists(directoryPath))
         {
-            Directory.CreateDirectory($".git/objects/{hash[..2]}");
+            Directory.CreateDirectory(directoryPath);
         }
     }
 
@@ -57,5 +59,18 @@ internal static class BlobUntil
         memoryStream.Position = 0;
         var hashBytes = sha1.ComputeHash(memoryStream);
         return Convert.ToHexStringLower(hashBytes);
+    }
+
+    public static string SaveFileAsBlob(string inputFilePath)
+    {
+        using var memoryStream = new MemoryStream();
+        using var inputFileStream = File.Open(inputFilePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+
+        var additionalBytes = Encoding.UTF8.GetBytes($"blob {inputFileStream.Length}\0");
+
+        memoryStream.Write(additionalBytes, 0, additionalBytes.Length);
+        inputFileStream.CopyTo(memoryStream);
+
+        return WriteBlob(memoryStream);
     }
 }
