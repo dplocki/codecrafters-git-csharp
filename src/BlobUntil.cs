@@ -36,15 +36,16 @@ internal static class BlobUntil
         return memoryStream;
     }
 
-    public static string WriteBlob(MemoryStream memoryStream)
+    public static Hash WriteBlob(MemoryStream memoryStream)
     {
         memoryStream.Position = 0;
 
-        var hash = CalculateHash(memoryStream);
+        var hash = Hash.FromStream(memoryStream);
+        var hashString = hash.ToString();
 
-        CreateDirectoryForHash(hash);
+        CreateDirectoryForHash(hashString);
 
-        using var outputFileStream = File.Create(GetPathForHash(hash));
+        using var outputFileStream = File.Create(GetPathForHash(hashString));
         using var compressStream = new ZLibStream(outputFileStream, CompressionMode.Compress);
 
         memoryStream.CopyTo(compressStream);
@@ -52,16 +53,7 @@ internal static class BlobUntil
         return hash;
     }
 
-    private static string CalculateHash(Stream memoryStream)
-    {
-        using var sha1 = SHA1.Create();
-
-        memoryStream.Position = 0;
-        var hashBytes = sha1.ComputeHash(memoryStream);
-        return Convert.ToHexStringLower(hashBytes);
-    }
-
-    public static string SaveFileAsBlob(string inputFilePath)
+    public static Hash SaveFileAsBlob(string inputFilePath)
     {
         using var memoryStream = new MemoryStream();
         using var inputFileStream = File.Open(inputFilePath, FileMode.Open, FileAccess.Read, FileShare.Read);

@@ -49,9 +49,10 @@ internal class LsTreeSubProgram
             {
                 Mode = mode,
                 Type = type,
-                Hash = Convert.ToHexStringLower(hash),
+                Hash = new Hash(hash),
                 Name = name
             };
-        } while (tokenBegin < data.Length);
+        }
+        while (tokenBegin < data.Length);
     }
 }

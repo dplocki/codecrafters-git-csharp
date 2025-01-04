@@ -2,6 +2,6 @@ internal struct TreeLine
 {
     public string Mode;
     public string Type;
-    public string Hash;
+    public Hash Hash;
     public string Name;
 }

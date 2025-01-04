@@ -4,7 +4,9 @@ internal class Hash
 {
     private readonly byte[] content;
 
-    private Hash(byte[] content)
+    public byte[] Content => content;
+
+    public Hash(byte[] content)
     {
         if (content.Length != 20)
         {
