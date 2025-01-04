@@ -91,7 +91,7 @@ switch (command)
         }
 
     case "write-tree":
-        WriteTreeSubProgram.Run(localArgs);
+        WriteTreeSubProgram.Run();
         return;
 
     default:
