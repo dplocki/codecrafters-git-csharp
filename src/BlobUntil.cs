@@ -44,6 +44,7 @@ internal static class BlobUntil
 
         CreateDirectoryForHash(hashString);
 
+        memoryStream.Position = 0;
         using var outputFileStream = File.Create(GetPathForHash(hashString));
         using var compressStream = new ZLibStream(outputFileStream, CompressionMode.Compress);
 
