@@ -41,9 +41,9 @@ internal class LsTreeSubProgram
             var name = Encoding.UTF8.GetString(data, tokenBegin, tokenEnd - tokenBegin);
             tokenBegin = tokenEnd + 1;
 
-            var hash = new byte[20];
-            Array.Copy(data, tokenBegin, hash, 0, 20);
-            tokenBegin += 20;
+            var hash = new byte[Hash.Length];
+            Array.Copy(data, tokenBegin, hash, 0, Hash.Length);
+            tokenBegin += Hash.Length;
 
             yield return new TreeLine
             {

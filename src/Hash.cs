@@ -2,15 +2,17 @@ using System.Security.Cryptography;
 
 internal class Hash
 {
+    public const int Length = 20;
+
     private readonly byte[] content;
 
     public byte[] Content => content;
 
     public Hash(byte[] content)
     {
-        if (content.Length != 20)
+        if (content.Length != Length)
         {
-            throw new ArgumentException("Hash must be 20 bytes long");
+            throw new ArgumentException($"Hash must be {Length} bytes long");
         }
 
         this.content = content;
