@@ -10,24 +10,26 @@ var localArgs = args.Skip(1).ToArray();
 switch (command)
 {
     case "init":
-        InitSubProgram.Run(localArgs);
-        return;
+        {
+            InitSubProgram.Run(localArgs);
+            return;
+        }
 
     case "cat-file":
         {
-            if (args.Length < 1)
+            if (localArgs.Length < 1)
             {
                 Console.WriteLine("Please provide a sub-command parameters.");
                 return;
             }
 
-            if (args[0] != "-p")
+            if (localArgs[0] != "-p")
             {
-                Console.WriteLine($"Unknown sub-command {args[0]}");
+                Console.WriteLine($"Unknown sub-command parameter: {args[0]}");
                 return;
             }
 
-            if (args.Length < 2)
+            if (localArgs.Length < 2)
             {
                 Console.WriteLine("Please provide a blob hash.");
                 return;
@@ -46,25 +48,25 @@ switch (command)
 
     case "hash-object":
         {
-            if (args.Length < 1)
+            if (localArgs.Length < 1)
             {
                 Console.WriteLine("Please provide a sub-command parameters.");
                 return;
             }
 
-            if (args[0] != "-w")
+            if (localArgs[0] != "-w")
             {
-                Console.WriteLine($"Unknown sub-command {args[0]}");
+                Console.WriteLine($"Unknown sub-command parameter {localArgs[0]}");
                 return;
             }
 
-            if (args.Length < 2)
+            if (localArgs.Length < 2)
             {
                 Console.WriteLine("Please provide a file.");
                 return;
             }
 
-            var inputFilePath = args[1];
+            var inputFilePath = localArgs[1];
 
             HashObjectSubProgram.Run(inputFilePath);
             return;
@@ -91,8 +93,10 @@ switch (command)
         }
 
     case "write-tree":
-        WriteTreeSubProgram.Run();
-        return;
+        {
+            WriteTreeSubProgram.Run();
+            return;
+        }
 
     default:
         throw new ArgumentException($"Unknown command {command}");

@@ -26,7 +26,8 @@ internal class Hash
         return new Hash(sha1.ComputeHash(stream));
     }
 
-    public override string ToString() {
+    public override string ToString()
+    {
         return Convert.ToHexStringLower(content);
     }
 }
