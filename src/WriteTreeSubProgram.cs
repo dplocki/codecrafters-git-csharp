@@ -15,24 +15,25 @@ internal class WriteTreeSubProgram
         var results = entries
             .Select(fullPath => new FileInfo(fullPath))
             .Where(entryInfo => entryInfo.Name != ".git")
-            .Select(entryInfo => {
-                if (!entryInfo.Attributes.HasFlag(FileAttributes.Directory))
+            .Select(entryInfo =>
+            {
+                if (entryInfo.Attributes.HasFlag(FileAttributes.Directory))
                 {
                     return new TreeLine()
                     {
-                        Mode = "100644",
-                        Type = "blob",
+                        Mode = "40000",
+                        Type = "tree",
                         Name = entryInfo.Name,
-                        Hash = BlobUntil.SaveFileAsBlob(entryInfo.FullName)
+                        Hash = IterateThroughDirectory(entryInfo.FullName)
                     };
                 }
 
                 return new TreeLine()
                 {
-                    Mode = "40000",
-                    Type = "tree",
+                    Mode = "100644",
+                    Type = "blob",
                     Name = entryInfo.Name,
-                    Hash = IterateThroughDirectory(entryInfo.FullName)
+                    Hash = BlobUntil.SaveFileAsBlob(entryInfo.FullName)
                 };
             })
             .ToArray();
@@ -44,7 +45,7 @@ internal class WriteTreeSubProgram
 
         foreach (var result in results)
         {
-            memorySteam.Write(Encoding.UTF8.GetBytes($"{result.Mode} {result.Type} {result.Name}\0"));
+            memorySteam.Write(Encoding.UTF8.GetBytes($"{result.Mode} {result.Name}\0"));
             memorySteam.Write(result.Hash.Content, 0, Hash.Length);
         }
 
