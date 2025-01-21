@@ -98,6 +98,20 @@ switch (command)
             return;
         }
 
+    case "clone":
+        {
+            if (localArgs.Length < 2)
+            {
+                Console.WriteLine("Please provide a sub-command parameters");
+            }
+
+            var link = localArgs[0];
+            var directoryPath = localArgs[1];
+
+            CloneSubProgram.Run(link, directoryPath);
+            return;
+        }
+
     default:
         throw new ArgumentException($"Unknown command {command}");
 }
