@@ -19,26 +19,26 @@ switch (command)
         {
             if (localArgs.Length < 1)
             {
-                Console.WriteLine("Please provide a sub-command parameters.");
+                Console.Error.WriteLine("Please provide a sub-command parameters.");
                 return;
             }
 
             if (localArgs[0] != "-p")
             {
-                Console.WriteLine($"Unknown sub-command parameter: {args[0]}");
+                Console.Error.WriteLine($"Unknown sub-command parameter: {args[0]}");
                 return;
             }
 
             if (localArgs.Length < 2)
             {
-                Console.WriteLine("Please provide a blob hash.");
+                Console.Error.WriteLine("Please provide a blob hash.");
                 return;
             }
 
             var hash = localArgs[1];
             if (hash.Length != 40)
             {
-                Console.WriteLine("Provided hash is incorrect");
+                Console.Error.WriteLine("Provided hash is incorrect");
                 return;
             }
 
@@ -50,19 +50,19 @@ switch (command)
         {
             if (localArgs.Length < 1)
             {
-                Console.WriteLine("Please provide a sub-command parameters.");
+                Console.Error.WriteLine("Please provide a sub-command parameters.");
                 return;
             }
 
             if (localArgs[0] != "-w")
             {
-                Console.WriteLine($"Unknown sub-command parameter {localArgs[0]}");
+                Console.Error.WriteLine($"Unknown sub-command parameter {localArgs[0]}");
                 return;
             }
 
             if (localArgs.Length < 2)
             {
-                Console.WriteLine("Please provide a file.");
+                Console.Error.WriteLine("Please provide a file.");
                 return;
             }
 
@@ -76,14 +76,14 @@ switch (command)
         {
             if (localArgs.Length == 0)
             {
-                Console.WriteLine("Please provide a sub-command parameters.");
+                Console.Error.WriteLine("Please provide a sub-command parameters.");
                 return;
             }
 
             var nameOnly = localArgs.Contains("--name-only");
             if (nameOnly && localArgs.Length == 1 || !nameOnly && localArgs.Length == 0)
             {
-                Console.WriteLine("Please provide a hash.");
+                Console.Error.WriteLine("Please provide a hash.");
                 return;
             }
 
@@ -102,7 +102,8 @@ switch (command)
         {
             if (localArgs.Length < 2)
             {
-                Console.WriteLine("Please provide a sub-command parameters");
+                Console.Error.WriteLine("Please provide a sub-command parameters");
+                return;
             }
 
             var link = localArgs[0];
@@ -111,7 +112,7 @@ switch (command)
             CloneSubProgram.Run(link, directoryPath);
             return;
         }
-
-    default:
-        throw new ArgumentException($"Unknown command {command}");
 }
+
+Console.Error.WriteLine($"Unknown command {command}");
+return;
