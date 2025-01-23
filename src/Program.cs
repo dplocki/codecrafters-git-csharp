@@ -109,7 +109,7 @@ switch (command)
             var link = localArgs[0];
             var directoryPath = localArgs[1];
 
-            CloneSubProgram.Run(link, directoryPath);
+            await CloneSubProgram.Run(link, directoryPath);
             return;
         }
 }

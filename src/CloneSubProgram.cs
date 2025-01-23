@@ -1,6 +1,6 @@
 internal class CloneSubProgram
 {
-    public static void Run(string link, string directoryPath)
+    public static async Task Run(string url, string directoryPath)
     {
         if (Directory.Exists(directoryPath))
         {
@@ -9,5 +9,24 @@ internal class CloneSubProgram
         }
 
         Directory.CreateDirectory(directoryPath);
+
+        var httpClient = new HttpClient();
+        httpClient.DefaultRequestHeaders.Add("git-protocol", "version=1");
+        httpClient.DefaultRequestHeaders.Add("User-Agent", "HttpClient");
+
+        var serviceName = "git-upload-pack";
+        var discoveryUrl = $"{url}/info/refs?service={serviceName}";
+        var discoveryResponse = await httpClient.GetAsync(discoveryUrl);
+
+        if (!discoveryResponse.IsSuccessStatusCode)
+        {
+            Console.WriteLine($"Error: {discoveryResponse.StatusCode}");
+            Console.WriteLine(await discoveryResponse.Content.ReadAsStringAsync());
+            return;
+        }
+
+        var discoveryContent = await discoveryResponse.Content.ReadAsStringAsync();
+
+        Console.WriteLine(discoveryContent);
     }
 }
