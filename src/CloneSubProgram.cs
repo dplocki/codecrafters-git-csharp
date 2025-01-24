@@ -1,3 +1,5 @@
+using System.Text;
+
 internal class CloneSubProgram
 {
     public static async Task Run(string url, string directoryPath)
@@ -10,23 +12,34 @@ internal class CloneSubProgram
 
         Directory.CreateDirectory(directoryPath);
 
-        var httpClient = new HttpClient();
-        httpClient.DefaultRequestHeaders.Add("git-protocol", "version=1");
-        httpClient.DefaultRequestHeaders.Add("User-Agent", "HttpClient");
-
         var serviceName = "git-upload-pack";
-        var discoveryUrl = $"{url}/info/refs?service={serviceName}";
-        var discoveryResponse = await httpClient.GetAsync(discoveryUrl);
+        var repositoryUrl = $"{url}/info/refs?service={serviceName}";
 
-        if (!discoveryResponse.IsSuccessStatusCode)
+        using var httpClient = new HttpClient();
+
+        httpClient.DefaultRequestHeaders.Add("Accept", "application/x-git-upload-pack-advertisement");
+        httpClient.DefaultRequestHeaders.Add("git-protocol", "version=1");
+
+        using var stream = await httpClient.GetStreamAsync(repositoryUrl);
+        using var reader = new StreamReader(stream, Encoding.UTF8);
+
+        foreach (var item in ParseGitRefs(await reader.ReadToEndAsync()))
         {
-            Console.WriteLine($"Error: {discoveryResponse.StatusCode}");
-            Console.WriteLine(await discoveryResponse.Content.ReadAsStringAsync());
-            return;
+            Console.WriteLine(item.Key);
+            Console.WriteLine(item.Value);
+            Console.WriteLine();
         }
+    }
 
-        var discoveryContent = await discoveryResponse.Content.ReadAsStringAsync();
+    private static Dictionary<string, string> ParseGitRefs(string response)
+    {
+        var refs = new Dictionary<string, string>();
+        var lines = response.Split('\n');
 
-        Console.WriteLine(discoveryContent);
+        return lines.Skip(1)
+            .Where(line => !string.IsNullOrWhiteSpace(line) && !line.StartsWith("0000"))
+            .Where(line => line.Length > 4)
+            .Select(line => line.Substring(4).Trim().Split(' '))
+            .ToDictionary(parts => parts[1], parts => parts[0]);
     }
 }
