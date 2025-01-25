@@ -2,6 +2,8 @@ using System.Text;
 
 internal class CloneSubProgram
 {
+    private const string serviceName = "git-upload-pack";
+
     public static async Task Run(string url, string directoryPath)
     {
         if (Directory.Exists(directoryPath))
@@ -12,7 +14,6 @@ internal class CloneSubProgram
 
         Directory.CreateDirectory(directoryPath);
 
-        var serviceName = "git-upload-pack";
         var repositoryUrl = $"{url}/info/refs?service={serviceName}";
 
         using var httpClient = new HttpClient();
@@ -28,6 +29,7 @@ internal class CloneSubProgram
             Console.WriteLine(item.Key);
             Console.WriteLine(item.Value);
             Console.WriteLine();
+            await DownloadGitObjectAsync(url, item.Value);
         }
     }
 
@@ -39,7 +41,23 @@ internal class CloneSubProgram
         return lines.Skip(1)
             .Where(line => !string.IsNullOrWhiteSpace(line) && !line.StartsWith("0000"))
             .Where(line => line.Length > 4)
-            .Select(line => line.Substring(4).Trim().Split(' '))
+            .Select(line => line[4..].Trim().Split(' '))
             .ToDictionary(parts => parts[1], parts => parts[0]);
+    }
+
+    public static async Task<byte[]> DownloadGitObjectAsync(string url, string objectHash)
+    {
+        using var client = new HttpClient();
+
+        var repositoryUrl = $"{url}/git/git-upload-pack";
+        var payload = new StringContent(
+            $"0032want {objectHash}\n" +
+            "0000",
+            Encoding.UTF8,
+            "application/x-git-upload-pack-request"
+        );
+
+        var response = await client.PostAsync(repositoryUrl, payload);
+        return await response.Content.ReadAsByteArrayAsync();
     }
 }
