@@ -1,3 +1,5 @@
+
+[SubProgram("init")]
 internal static class InitSubProgram
 {
     public static void Run(string[] args)

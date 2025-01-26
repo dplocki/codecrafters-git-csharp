@@ -1,5 +1,7 @@
 using System.Text;
 
+
+[SubProgram("write-tree")]
 internal class WriteTreeSubProgram
 {
     public static void Run()

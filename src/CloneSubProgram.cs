@@ -1,5 +1,6 @@
 using System.Text;
 
+[SubProgram("clone")]
 internal class CloneSubProgram
 {
     private const string serviceName = "git-upload-pack";

@@ -1,5 +1,6 @@
 using System.Text;
 
+[SubProgram("cat-file")]
 internal static class CatFileSubProgram
 {
     public static void Run(string hash)

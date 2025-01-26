@@ -1,5 +1,6 @@
 using System.Text;
 
+[SubProgram("ls-tree")]
 internal class LsTreeSubProgram
 {
     private const byte Null = 0;
