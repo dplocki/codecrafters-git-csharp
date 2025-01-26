@@ -1,10 +1,5 @@
 [AttributeUsage(AttributeTargets.Class)]
-public class SubProgramAttribute : Attribute
+public class SubProgramAttribute(string name) : Attribute
 {
-    public string Name { get; private set; }
-
-    public SubProgramAttribute(string name)
-    {
-        Name = name;
-    }
+    public string Name { get; private set; } = name;
 }
