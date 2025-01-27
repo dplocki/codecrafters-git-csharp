@@ -1,13 +1,15 @@
 
 [SubProgram("init")]
-internal static class InitSubProgram
+internal class InitSubProgram : ISubProgram
 {
-    public static void Run(string[] args)
+    public Task<int> Run(string[] args)
     {
         Directory.CreateDirectory(".git");
         Directory.CreateDirectory(".git/objects");
         Directory.CreateDirectory(".git/refs");
         File.WriteAllText(".git/HEAD", "ref: refs/heads/main\n");
         Console.WriteLine("Initialized git directory");
+
+        return Task.FromResult(0);
     }
 }

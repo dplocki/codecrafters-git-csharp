@@ -1,13 +1,28 @@
 using System.Text;
 
 [SubProgram("ls-tree")]
-internal class LsTreeSubProgram
+internal class LsTreeSubProgram : ISubProgram
 {
     private const byte Null = 0;
     private const byte Space = 32;
 
-    public static void Run(string hash, bool nameOnly)
+    public Task<int> Run(string[] args)
     {
+        if (args.Length == 0)
+        {
+            Console.Error.WriteLine("Please provide a sub-command parameters.");
+            return Task.FromResult(1);
+        }
+
+        var nameOnly = args.Contains("--name-only");
+        if (nameOnly && args.Length == 1 || !nameOnly && args.Length == 0)
+        {
+            Console.Error.WriteLine("Please provide a hash.");
+            return Task.FromResult(1);
+        }
+
+        var hash = args.First(arg => arg != "--name-only");
+
         using var memoryStream = BlobUntil.DecompressBlob(hash);
 
         var data = memoryStream.ToArray();
@@ -26,6 +41,8 @@ internal class LsTreeSubProgram
                 Console.WriteLine($"{item.Mode} {item.Type} {item.Hash} {item.Name}");
             }
         }
+
+        return Task.FromResult(0);
     }
 
     private static IEnumerable<TreeLine> ParseTreeEntries(byte[] data, int tokenBegin)

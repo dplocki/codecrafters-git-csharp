@@ -1,16 +1,25 @@
 using System.Text;
 
 [SubProgram("clone")]
-internal class CloneSubProgram
+internal class CloneSubProgram : ISubProgram
 {
     private const string serviceName = "git-upload-pack";
 
-    public static async Task Run(string url, string directoryPath)
+    public async Task<int> Run(string[] args)
     {
+        if (args.Length < 2)
+        {
+            Console.Error.WriteLine("Please provide a sub-command parameters");
+            return 1;
+        }
+
+        var url = args[0];
+        var directoryPath = args[1];
+
         if (Directory.Exists(directoryPath))
         {
             Console.Error.WriteLine($"Path {directoryPath} already exist");
-            return;
+            return 1;
         }
 
         Directory.CreateDirectory(directoryPath);
@@ -32,6 +41,8 @@ internal class CloneSubProgram
             Console.WriteLine();
             await DownloadGitObjectAsync(url, item.Value);
         }
+
+        return 0;
     }
 
     private static Dictionary<string, string> ParseGitRefs(string response)

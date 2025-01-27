@@ -2,12 +2,13 @@ using System.Text;
 
 
 [SubProgram("write-tree")]
-internal class WriteTreeSubProgram
+internal class WriteTreeSubProgram : ISubProgram
 {
-    public static void Run()
+    public Task<int> Run(string[] args)
     {
         var directoryPath = Directory.GetCurrentDirectory();
         Console.WriteLine(IterateThroughDirectory(directoryPath).ToString());
+        return Task.FromResult(0);
     }
 
     private static Hash IterateThroughDirectory(string directoryPath)
